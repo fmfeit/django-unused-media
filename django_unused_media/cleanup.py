@@ -38,7 +38,7 @@ def get_used_media():
     return media
 
 
-def get_all_media(exclude=None, minimum_file_age=None):
+def get_all_media(exclude=None, minimum_file_age=None, base_offset=''):
     """
         Get all media from MEDIA_ROOT
     """
@@ -49,7 +49,7 @@ def get_all_media(exclude=None, minimum_file_age=None):
     media = set()
     initial_time = time.time()
 
-    for root, dirs, files in os.walk(six.text_type(settings.MEDIA_ROOT)):
+    for root, dirs, files in os.walk(six.text_type(os.path.join(settings.MEDIA_ROOT, base_offset))):
         for name in files:
             path = os.path.abspath(os.path.join(root, name))
             relpath = os.path.relpath(path, settings.MEDIA_ROOT)
@@ -68,7 +68,7 @@ def get_all_media(exclude=None, minimum_file_age=None):
     return media
 
 
-def get_unused_media(exclude=None, minimum_file_age=None):
+def get_unused_media(exclude=None, minimum_file_age=None, base_offset=''):
     """
         Get media which are not used in models
     """
@@ -76,7 +76,7 @@ def get_unused_media(exclude=None, minimum_file_age=None):
     if not exclude:
         exclude = []
 
-    all_media = get_all_media(exclude, minimum_file_age)
+    all_media = get_all_media(exclude, minimum_file_age, base_offset)
     used_media = get_used_media()
 
     return all_media - used_media

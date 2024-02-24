@@ -40,6 +40,12 @@ class Command(BaseCommand):
                             default=60,
                             type=int,
                             help='Skip files younger this age (sec)')
+        
+        parser.add_argument('--base-offset',
+                            dest='base_offset',
+                            default='',
+                            type=str,
+                            help='Start looking for files under the specified offset (relative to MEDIA_ROOT).')
 
         parser.add_argument('--remove-empty-dirs',
                             dest='remove_empty_dirs',
@@ -77,6 +83,7 @@ class Command(BaseCommand):
         unused_media = get_unused_media(
             exclude=options.get('exclude'),
             minimum_file_age=options.get('minimum_file_age'),
+            base_offset=options.get('base_offset'),
         )
 
         if not unused_media:
